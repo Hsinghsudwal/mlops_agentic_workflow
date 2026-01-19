@@ -3,47 +3,29 @@ from orchestrator.agentic_orchestrator import AgenticOrchestrator
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Agentic MLOps Orchestrator",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python main.py --goal baseline --dataset wine --dataset-path ./data/wine.csv
-  python main.py --goal ml_train --dataset wine --dataset-path ./data/wine.csv --prefix init --extra deploy --env local
-  python main.py --goal deploy --dataset wine --dataset-path ./data/wine.csv --prefix prod
-        """
-    )
+    parser = argparse.ArgumentParser("Agentic Data Runtime")
+
     parser.add_argument(
-        "--goal",
+        "--phase",
         required=True,
-        choices=["baseline", "ml_train", "serve", "deploy", "monitor", "heal"],
-        help="Goal/Intent to execute"
+        help="Choose agent"
     )
+
+    parser.add_argument("--cost", type=float, default=10.0)
+
     parser.add_argument(
         "--dataset",
         required=True,
-        help="Dataset name"
+        help="Dataset-path"
     )
     
-    parser.add_argument(
-        "--dataset-path",
-        required=True,
-        help="Path to dataset"
-    )
-    parser.add_argument(
-        "--prefix",
-        default="init",
-        help="Artifact prefix (init, replay, hotfix, shadow, prod)"
-    )
-    
-
     args = parser.parse_args()
     
     orchestrator = AgenticOrchestrator(
-        intent=args.goal,
+        phase=args.phase,
         dataset=args.dataset,
-        dataset_path=args.dataset_path,
-        prefix=args.prefix
+        cost=args.cost,
+
     )
     
     result = orchestrator.run()
